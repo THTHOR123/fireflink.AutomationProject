@@ -91,4 +91,9 @@ public class TestNGPractice extends BaseClass {
 		System.out.println();
 	}
 	
+	@Test
+	public void demo() {
+		System.out.println("");
+	}
+	
 }
