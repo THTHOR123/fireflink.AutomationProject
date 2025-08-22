@@ -93,7 +93,7 @@ public class TestNGPractice extends BaseClass {
 	
 	@Test
 	public void demo() {
-		System.out.println("Demo method running");
+		System.out.println("Demo method running i am doing nothin");
 	}
 	
 }
