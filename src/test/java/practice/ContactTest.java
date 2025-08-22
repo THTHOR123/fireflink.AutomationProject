@@ -32,6 +32,7 @@ public class ContactTest extends BaseClass {
 		dp.getContactsLink().click();
 		Reporter.log("Contact link clicked",true);
 		
+		
 		cp.getCreateContactBtn().click();
 		Reporter.log("Create Contact Button clicked",true);
 		
