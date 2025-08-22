@@ -35,6 +35,7 @@ public class ContactTest extends BaseClass {
 		cp.getCreateContactBtn().click();
 		Reporter.log("Create Contact Button clicked",true);
 		
+		System.out.println("I Have done everthing ");
 //		Assert.fail();
 		ccp.createContact(driver, CONTACTNAME, ORGANIZATION, MOBILE, TITLE);
 		
