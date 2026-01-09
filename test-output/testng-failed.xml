@@ -3,17 +3,11 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="practice.ContactTest">
+      <class name="practice.CreateCampaign">
         <methods>
-          <include name="bcConfig"/>
-          <include name="closeConfig"/>
-          <include name="bsConfig"/>
-          <include name="tc_002_CreateContact"/>
-          <include name="acConfig"/>
-          <include name="atConfig"/>
-          <include name="btConfig"/>
+          <include name="createCampaignTest"/>
         </methods>
-      </class> <!-- practice.ContactTest -->
+      </class> <!-- practice.CreateCampaign -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

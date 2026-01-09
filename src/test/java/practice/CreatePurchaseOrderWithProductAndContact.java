@@ -2,7 +2,10 @@ package practice;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
@@ -12,21 +15,27 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class CreatePurchaseOrderWithProductAndContact {
 
-	public static void main(String[] args) throws Exception {
+	@Test
+	public  void sampleTest() throws Exception {
 		
 //		Random random = new Random();
 		
@@ -79,200 +88,53 @@ public class CreatePurchaseOrderWithProductAndContact {
 		
 		
 		
-		WebDriver driver = null;
+//		WebDriver driver = null;
+//		
+//		
+//		if(browser.equals("chrome")) {
+//			driver = new ChromeDriver();
+//		}
+//		else if(browser.equals("edge")) {
+//			WebDriverManager.edgedriver().setup();
+//			driver = new EdgeDriver();
+//		}
+//		else if(browser.equals("firefox")) {
+//			driver = new FirefoxDriver();
+//		}
+//		else {
+//			driver = new ChromeDriver();
+//		}
+//		
+//		driver.manage().window().maximize();
+//		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+		
+		String seleniumHubUrl = "https://cloud.fireflink.com/backend/fireflinkcloud/wd/hub?accessKey=ed7d6b81-8d50-4817-9fe9-7feaea784205&licenseId=LIC1026556&projectName=Practice+Session/";
+		EdgeOptions browserOptions = new EdgeOptions();
+		
+		Map<String, Object> prefs = new HashMap<>();
+		prefs.put("profile.password_manager_enabled", false);   // Disable password manager
+		prefs.put("credentials_enable_service", false);         // Disable save password popup
+		prefs.put("autofill.profile_enabled", false);           // Disable save address popup
+		prefs.put("autofill.address_enabled", false);           // Extra safety
+
+		browserOptions.setExperimentalOption("prefs", prefs);
 		
 		
-		if(browser.equals("chrome")) {
-			driver = new ChromeDriver();
-		}
-		else if(browser.equals("edge")) {
-			WebDriverManager.edgedriver().setup();
-			driver = new EdgeDriver();
-		}
-		else if(browser.equals("firefox")) {
-			driver = new FirefoxDriver();
-		}
-		else {
-			driver = new ChromeDriver();
-		}
-		
+		browserOptions.setPlatformName("Windows 11");
+		browserOptions.setBrowserVersion("142");
+		WebDriver driver = new RemoteWebDriver(new URL(seleniumHubUrl), browserOptions);
+		driver.manage().window().setSize(new Dimension(1024, 768));
+
+
 		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+		
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 		Actions act = new Actions(driver);
 		
 		driver.get(url);
 		
-		driver.findElement(By.id("username")).sendKeys(username);
-		driver.findElement(By.id("inputPassword")).sendKeys(password);
-		
-		driver.findElement(By.tagName("button")).click();
-		
-		driver.findElement(By.xpath("//a[text()='Contacts']")).click();
-		
-		driver.findElement(By.xpath("//span[text()='Create Contact']/ancestor::button")).click();
-		
-		//CREATE CONTACT 
-		driver.findElement(By.xpath("//input[@name='contactName']")).sendKeys(contactName);
-		
-		driver.findElement(By.xpath("//input[@name='organizationName']")).sendKeys(organization);
-		
-		driver.findElement(By.xpath("//input[@name='mobile']")).sendKeys(mobile);
-		
-		driver.findElement(By.xpath("//input[@name='title']")).sendKeys(title);
-		
-		
-		driver.findElement(By.xpath("//DIV[contains(@class,'form-container')]/DIV/DIV/DIV/BUTTON")).click();
-		
-		
-		
-		String mainId = driver.getWindowHandle();
-		Set<String> winId = driver.getWindowHandles();
-		
-		for(String id:winId) {
-			if(!id.equals(mainId))
-			{
-				driver.switchTo().window(id);
-			}
-		}
-		
-		driver.manage().window().maximize();
-		
-		WebElement selectButton = driver.findElement(By.xpath("//button[@class='select-btn']"));
-		wait.until(ExpectedConditions.visibilityOf(selectButton)).click();
-		
-		
-		driver.switchTo().window(mainId);
-		
-		driver.findElement(By.xpath("//button[text()='Create Contact']")).click();
-		
-		Thread.sleep(7000);
-//		wait.until(ExpectedConditions.vis);
-		
-//		driver.findElement(By.xpath("//div[@class='Toastify']"));
-		//CREATE PRODUCTS
-		driver.findElement(By.xpath("//a[text()='Products']")).click();
-		
-		driver.findElement(By.xpath("//span[text()='Add Product']/ancestor::button")).click();
-		
-		driver.findElement(By.xpath("//input[@name='quantity']")).sendKeys(Quantity);
-		
-		driver.findElement(By.xpath("//input[@name='productName']")).sendKeys(productName);
-		
-		WebElement priceUnit = driver.findElement(By.xpath("//input[@name='price']"));
-		priceUnit.clear();
-		priceUnit.sendKeys(price);
-		
-		WebElement categorySelect = driver.findElement(By.xpath("//select[@name='productCategory']"));
-		
-		Select categoryDropdown = new Select(categorySelect);
-		
-		categoryDropdown.selectByValue(category);
-		
-		WebElement vendorSelect = driver.findElement(By.xpath("//select[@name='vendorId']"));
-		Select vendorDropdown = new Select(vendorSelect);
-		vendorDropdown.selectByVisibleText(vendor);
-		
-		driver.findElement(By.xpath("//button[text()='Add']")).click();
-		
-		Thread.sleep(7000);
-		
-		//CREATE PURCHASE ORDER
-		driver.findElement(By.xpath("//a[text()='Purchase Order']")).click();
-		
-		driver.findElement(By.xpath("//span[text()='Create Order']/ancestor::button")).click();
-		
-		driver.findElement(By.xpath("//input[@name='dueDate']")).sendKeys(purchaseDueDate);
-		
-		driver.findElement(By.xpath("//input[@name='subject']")).sendKeys(purchaseSubject);
-		
-		driver.findElement(By.xpath("//div[@class='form-group']/label[text()='Contact']/following-sibling::div/button")).click();
-		
-		winId = driver.getWindowHandles();
-			
-			for(String id:winId) {
-				if(!id.equals(mainId))
-				{
-					driver.switchTo().window(id);
-				}
-			}
-			
-		
-			WebElement contactSelect = driver.findElement(By.id("search-criteria"));
-			Select contactdroppdown=  new Select(contactSelect);
-			contactdroppdown.selectByVisibleText("Organization");
-			
-				
-			
-			driver.findElement(By.id("search-input")).sendKeys(organization);
-			
-//			driver.findElement(By.xpath("//button[contains(@onclick,'"+contactName+"')]")).click();
-			
-			wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//button[contains(@onclick,'"+contactName+"')]")))).click();
-		
-		driver.switchTo().window(mainId);
-		
-		act.scrollByAmount(0, 200).perform();
-		
-		//billing
-		driver.findElement(By.xpath("//label[text()='Billing Address']/following-sibling::textarea[@name='address']")).sendKeys(billingAddress);
-		
-		driver.findElement(By.xpath("//label[text()='Billing PO Box']/following-sibling::input[@name='poBox']")).sendKeys(billingPOBox);
-		
-		driver.findElement(By.xpath("//label[text()='Billing City']/following-sibling::input[@name='city']")).sendKeys(billingCity);
-		
-		driver.findElement(By.xpath("//label[text()='Billing State']/following-sibling::input[@name='state']")).sendKeys(billingState);
-		
-		driver.findElement(By.xpath("//label[text()='Billing Postal Code']/following-sibling::input[@name='postalCode']")).sendKeys(billingPostalCode);  
-		
-		driver.findElement(By.xpath("//label[text()='Billing Country']/following-sibling::input[@name='country']")).sendKeys(billingCountry);
-		
-		//shippping
-		driver.findElement(By.xpath("//label[text()='Shipping Address']/following-sibling::textarea[@name='address']")).sendKeys(shippingAddress);
-		
-		driver.findElement(By.xpath("//label[text()='Shipping PO Box']/following-sibling::input[@name='poBox']")).sendKeys(shippingPOBox);
-		
-		driver.findElement(By.xpath("//label[text()='City']/following-sibling::input[@name='city']")).sendKeys(shippingCity);
-		
-		driver.findElement(By.xpath("//label[text()='State']/following-sibling::input[@name='state']")).sendKeys(billingState);
-		
-		driver.findElement(By.xpath("//label[text()='Postal Code']/following-sibling::input[@name='postalCode']")).sendKeys(shippingPostalCode);  
-		
-		driver.findElement(By.xpath("//label[text()='Country']/following-sibling::input[@name='country']")).sendKeys(shippingCountry);
-		
-		driver.findElement(By.xpath("//button[text()='Add Product']")).click();
-		
-		act.scrollByAmount(0, 200).perform();
-		
-		winId = driver.getWindowHandles();
-		
-		for(String id:winId) {
-			if(!id.equals(mainId))
-			{
-				driver.switchTo().window(id);
-			}
-		}
-		
-		WebElement productSelect = driver.findElement(By.id("search-criteria"));
-		
-		Select productDropdown = new Select(productSelect);
-		
-		productDropdown.selectByVisibleText("Product Name");
-		
-		driver.findElement(By.id("search-input")).sendKeys(productName);
-		
-		driver.findElement(By.xpath("//button")).click();
-		
-		driver.switchTo().window(mainId);
-		
-		driver.findElement(By.xpath("//button[text()='Create Purchase Order']")).click();
-		
-		Thread.sleep(7000);
-		
-		WebElement userLogo = driver.findElement(By.xpath("//div[@class='user-icon']"));
-		
-//		act.moveToElement(userLogo).perform();
-//		act.moveByOffset(-10, 50).click().perform();
+		driver.findElement(By.id("username")).sendKeys("rmgyantra");
+		driver.findElement(By.id("inputPassword")).sendKeys("rmgy@9999");
 		
 		driver.quit();
 	}

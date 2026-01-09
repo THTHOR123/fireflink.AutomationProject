@@ -1,9 +1,11 @@
 package Fireflink_ninza_CRM.GenericUitility;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -32,6 +34,7 @@ public class BaseClass {
 	
 	public WebDriver driver;
 	public static WebDriver sdriver;
+	
 	@BeforeSuite(alwaysRun = true)
 	public void bsConfig() {
 		
@@ -49,7 +52,21 @@ public class BaseClass {
 		
 		
 		if(BROWSER.equalsIgnoreCase("chrome")) {
-			driver = new ChromeDriver();
+			
+			ChromeOptions options = new ChromeOptions();
+
+			// Disable password manager
+			options.addArguments("--disable-save-password-bubble");
+			options.addArguments("--disable-notifications");
+
+			// Turn off password leak detection
+			options.setExperimentalOption("prefs", Map.of(
+			    "credentials_enable_service", false,
+			    "profile.password_manager_enabled", false,
+			    "profile.password_manager_leak_detection", false
+			));
+			
+			driver = new ChromeDriver(options);
 		}
 		else if(BROWSER.equalsIgnoreCase("edge")) {
 			WebDriverManager.edgedriver().setup();
